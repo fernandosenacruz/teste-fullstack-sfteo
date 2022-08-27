@@ -1,5 +1,5 @@
 import express, { json } from 'express';
-import installmentAmountGenerate from './helpers/installmentAmountGenerate';
+import paymentMonthsGenerate from './helpers/installmentAmountGenerate';
 import { PrismaClient } from '@prisma/client';
 import IPacient from './interfaces/IPacient';
 
@@ -9,18 +9,14 @@ const server = express();
 
 server.use(json());
 
-server.get('/', async (_req, res) => {
-  const allPacients = await prisma.pacient.findMany();
-
-  return res.json(allPacients);
-});
-
 server.post('/', async (req, res) => {
   const { name, totalCostDentalTreatment, numberInstallment } = req.body;
-  const installmentAmount = totalCostDentalTreatment / numberInstallment;
-  const paymentMonths = installmentAmountGenerate(installmentAmount);
+  const installmentAmount = Math.floor(
+    totalCostDentalTreatment / numberInstallment,
+  );
+  const paymentMonths = paymentMonthsGenerate(numberInstallment);
 
-  const pacient: IPacient = await prisma.pacient.create({
+  const createPacient: IPacient = await prisma.pacient.create({
     data: {
       name,
       totalCostDentalTreatment,
@@ -30,16 +26,34 @@ server.post('/', async (req, res) => {
     },
   });
 
-  return res.json(pacient);
+  return res.json(createPacient);
+});
+
+server.get('/', async (_req, res) => {
+  const allPacients: IPacient[] = await prisma.pacient.findMany();
+
+  return res.json(allPacients);
+});
+
+server.get('/:id', async (req, res) => {
+  const { id: string } = req.params;
+
+  const pacientById: IPacient | null = await prisma.pacient.findFirst({
+    where: { id: string },
+  });
+
+  return res.json(pacientById);
 });
 
 server.put('/:id', async (req, res) => {
   const { id: string } = req.params;
   const { totalCostDentalTreatment, numberInstallment } = req.body;
-  const installmentAmount = totalCostDentalTreatment / numberInstallment;
-  const paymentMonths = installmentAmountGenerate(installmentAmount);
+  const installmentAmount = Math.floor(
+    totalCostDentalTreatment / numberInstallment,
+  );
+  const paymentMonths = paymentMonthsGenerate(numberInstallment);
 
-  const pacient = await prisma.pacient.update({
+  const updatePacient: IPacient = await prisma.pacient.update({
     where: { id: string },
     data: {
       totalCostDentalTreatment,
@@ -49,31 +63,31 @@ server.put('/:id', async (req, res) => {
     },
   });
 
-  return res.json(pacient);
+  return res.json(updatePacient);
 });
 
 server.patch('/:id', async (req, res) => {
   const { id: string } = req.params;
   const { name } = req.body;
 
-  const pacient = await prisma.pacient.update({
+  const pacthNamePacient = await prisma.pacient.update({
     where: { id: string },
     data: {
       name,
     },
   });
 
-  return res.json(pacient);
+  return res.json(pacthNamePacient);
 });
 
 server.delete('/:id', async (req, res) => {
   const { id: string } = req.params;
 
-  const pacient = await prisma.pacient.delete({
+  const deletePacient = await prisma.pacient.delete({
     where: { id: string },
   });
 
-  return res.json(pacient);
+  return res.json(deletePacient);
 });
 
 export default server;
