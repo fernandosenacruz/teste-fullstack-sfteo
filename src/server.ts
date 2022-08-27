@@ -1,5 +1,7 @@
 import express, { json } from 'express';
+import installmentAmountGenerate from './helpers/installmentAmountGenerate';
 import { PrismaClient } from '@prisma/client';
+import IPacient from './interfaces/IPacient';
 
 const prisma = new PrismaClient();
 
@@ -16,25 +18,9 @@ server.get('/', async (_req, res) => {
 server.post('/', async (req, res) => {
   const { name, totalCostDentalTreatment, numberInstallment } = req.body;
   const installmentAmount = totalCostDentalTreatment / numberInstallment;
-  const date = new Date();
-  let restartYear = 1;
-  const day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-  const paymentMonths = [];
+  const paymentMonths = installmentAmountGenerate(installmentAmount);
 
-  for (let i = 0; i < installmentAmount; i++) {
-    if (month === 11) {
-      month = restartYear;
-      year += 1;
-      paymentMonths.push(`${day}-${month}-${year}`);
-    } else {
-      month += 1;
-      paymentMonths.push(`${day}-${month}-${year}`);
-    }
-  }
-
-  const pacient = await prisma.pacient.create({
+  const pacient: IPacient = await prisma.pacient.create({
     data: {
       name,
       totalCostDentalTreatment,
@@ -43,6 +29,51 @@ server.post('/', async (req, res) => {
       paymentMonths,
     },
   });
+
+  return res.json(pacient);
+});
+
+server.put('/:id', async (req, res) => {
+  const { id: string } = req.params;
+  const { totalCostDentalTreatment, numberInstallment } = req.body;
+  const installmentAmount = totalCostDentalTreatment / numberInstallment;
+  const paymentMonths = installmentAmountGenerate(installmentAmount);
+
+  const pacient = await prisma.pacient.update({
+    where: { id: string },
+    data: {
+      totalCostDentalTreatment,
+      numberInstallment,
+      installmentAmount,
+      paymentMonths,
+    },
+  });
+
+  return res.json(pacient);
+});
+
+server.patch('/:id', async (req, res) => {
+  const { id: string } = req.params;
+  const { name } = req.body;
+
+  const pacient = await prisma.pacient.update({
+    where: { id: string },
+    data: {
+      name,
+    },
+  });
+
+  return res.json(pacient);
+});
+
+server.delete('/:id', async (req, res) => {
+  const { id: string } = req.params;
+
+  const pacient = await prisma.pacient.delete({
+    where: { id: string },
+  });
+
+  return res.json(pacient);
 });
 
 export default server;
