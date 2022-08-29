@@ -1,5 +1,5 @@
-export default interface IPacient {
-    id: string,
+export default interface IPatient {
+    id?: string,
     name: string,
     totalCostDentalTreatment: number,
     numberInstallment: number,
