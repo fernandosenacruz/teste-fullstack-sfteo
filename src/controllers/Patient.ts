@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { RequestHandler } from 'express';
 import paymentMonthsGenerate from '../helpers/installmentAmountGenerate';
 import {
   createPatientService,
@@ -9,118 +9,70 @@ import {
   deletePatientService,
 } from '../services/Patient';
 
-export const createPatient = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  try {
-    const { name, totalCostDentalTreatment, numberInstallment } = req.body;
-    const installmentAmount = Math.floor(
-      totalCostDentalTreatment / numberInstallment,
-    );
-    const paymentMonths = paymentMonthsGenerate(numberInstallment);
+export const createPatient: RequestHandler = async (req, res) => {
+  const { name, totalCostDentalTreatment, numberInstallment } = req.body;
+  const installmentAmount = Math.floor(
+    totalCostDentalTreatment / numberInstallment,
+  );
+  const paymentMonths = paymentMonthsGenerate(numberInstallment);
 
-    const { code, data } = await createPatientService({
-      name,
-      totalCostDentalTreatment,
-      numberInstallment,
-      installmentAmount,
-      paymentMonths,
-    });
+  const { code, data } = await createPatientService({
+    name,
+    totalCostDentalTreatment,
+    numberInstallment,
+    installmentAmount,
+    paymentMonths,
+  });
 
-    return res.status(code).json(data);
-  } catch (err) {
-    next(err);
-  }
+  return res.status(code).json(data);
 };
 
-export const getPatients = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  try {
-    const { code, data } = await getPatientsService();
+export const getPatients: RequestHandler = async (_req, res) => {
+  const { code, data } = await getPatientsService();
 
-    return res.status(code).json(data);
-  } catch (err) {
-    next(err);
-  }
+  return res.status(code).json(data);
 };
 
-export const getPatientById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  try {
-    const { id } = req.params;
+export const getPatientById: RequestHandler = async (req, res) => {
+  const { id } = req.params;
 
-    const { code, data } = await getPatientByIdService(id);
+  const { code, data } = await getPatientByIdService(id);
 
-    return res.status(code).json(data);
-  } catch (err) {
-    next(err);
-  }
+  return res.status(code).json(data);
 };
 
-export const updatePacient = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  try {
-    const { id } = req.params;
-    const { totalCostDentalTreatment, numberInstallment } = req.body;
-    const installmentAmount = Math.floor(
-      totalCostDentalTreatment / numberInstallment,
-    );
-    const paymentMonths = paymentMonthsGenerate(numberInstallment);
+export const updatePacient: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  const { totalCostDentalTreatment, numberInstallment } = req.body;
+  const installmentAmount = Math.floor(
+    totalCostDentalTreatment / numberInstallment,
+  );
+  const paymentMonths = paymentMonthsGenerate(numberInstallment);
 
-    const { code, data } = await updatePacientService({
-      id,
-      totalCostDentalTreatment,
-      numberInstallment,
-      installmentAmount,
-      paymentMonths,
-    });
+  const { code, data } = await updatePacientService({
+    id,
+    totalCostDentalTreatment,
+    numberInstallment,
+    installmentAmount,
+    paymentMonths,
+  });
 
-    return res.status(code).json(data);
-  } catch (err) {
-    next(err);
-  }
+  return res.status(code).json(data);
 };
 
-export const patchPatient = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
-  try {
-    const { id } = req.params;
-    const { name } = req.body;
+export const patchPatient: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
 
-    const { code, data } = await patchPatientService({ id, name });
+  const { code, data } = await patchPatientService({ id, name });
 
-    res.status(code).json(data);
-  } catch (err) {
-    next(err);
-  }
+  res.status(code).json(data);
 };
 
-export const deletedPatient = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { id } = req.params;
+export const deletedPatient: RequestHandler = async (req, res) => {
+  const { id } = req.params;
 
-    const { code, message } = await deletePatientService(id);
+  const { code, message } = await deletePatientService(id);
 
-    return res.status(code).json({ message });
-  } catch (err) {
-    next(err);
-  }
+  return res.status(code).json({ message });
 };

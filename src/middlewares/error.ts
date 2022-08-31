@@ -1,17 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
+import { ErrorRequestHandler } from 'express';
 import StatusCodes from 'http-status-codes';
 
-export const errorHandler = (
-  err: Error,
-  _req: Request,
-  res: Response,
-  next: NextFunction,
+export const errorHandler: ErrorRequestHandler = (
+  err,
+  _req,
+  res,
+  next,
 ) => {
   console.log(err);
-  if (err.statusCode === StatusCodes.BAD_REQUEST) {
+  if (err.isJoi) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       statusCode: StatusCodes.BAD_REQUEST,
-      message: err.message,
+      message: err.details[0].message,
     });
   }
 
