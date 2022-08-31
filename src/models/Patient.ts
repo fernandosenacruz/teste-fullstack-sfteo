@@ -29,7 +29,15 @@ export const getPatientsModel = async () => {
   return allPatients;
 };
 
-export const getPatientByIdModel = async (id : string) => {
+export const getPatientsByDateModel = async (selectedMonth: string) => {
+  const allPatients: IPatient[] = await prisma.patient.findMany({
+    where: { paymentMonths: { hasSome: [selectedMonth] } },
+  });
+
+  return allPatients;
+};
+
+export const getPatientByIdModel = async (id: string) => {
   const patientById: IPatient | null = await prisma.patient.findFirst({
     where: { id },
   });
@@ -66,7 +74,7 @@ export const patchPatientModel = async ({ id, name }: Partial<IPatient>) => {
   });
 
   return pacthNamePatient;
-}
+};
 
 export const deletePatientModel = async (id: string) => {
   const deletePatient = await prisma.patient.delete({
@@ -74,4 +82,4 @@ export const deletePatientModel = async (id: string) => {
   });
 
   return deletePatient;
-}
+};

@@ -4,6 +4,7 @@ import {
   deletedPatient,
   getPatientById,
   getPatients,
+  getPatientByMonth,
   patchPatient,
   updatePacient,
 } from '../controllers/Patient';
@@ -16,6 +17,7 @@ import {
 const router: Router = Router();
 
 router.get('/patients', getPatients);
+router.get('/patients/installment', getPatientByMonth);
 router.get('/patient/:id', getPatientById);
 
 router.post('/patient', validateCreatePatient, createPatient);

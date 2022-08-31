@@ -1,9 +1,11 @@
 import { RequestHandler } from 'express';
-import paymentMonthsGenerate from '../helpers/installmentAmountGenerate';
+import paymentMonthsGenerate from '../helpers/paymentMonthGenerate';
+import installmentAmountGenerate from '../helpers/installmentAmountGenerate';
 import {
   createPatientService,
   getPatientsService,
   getPatientByIdService,
+  getPatientsByDateService,
   updatePacientService,
   patchPatientService,
   deletePatientService,
@@ -11,8 +13,9 @@ import {
 
 export const createPatient: RequestHandler = async (req, res) => {
   const { name, totalCostDentalTreatment, numberInstallment } = req.body;
-  const installmentAmount = Math.floor(
-    totalCostDentalTreatment / numberInstallment,
+  const installmentAmount = installmentAmountGenerate(
+    totalCostDentalTreatment,
+    numberInstallment,
   );
   const paymentMonths = paymentMonthsGenerate(numberInstallment);
 
@@ -41,11 +44,20 @@ export const getPatientById: RequestHandler = async (req, res) => {
   return res.status(code).json(data);
 };
 
+export const getPatientByMonth: RequestHandler = (req, res) => {
+  const { selectedMonth } = req.query;
+
+  const shakira = getPatientsByDateService(selectedMonth as string);
+
+  return res.json(shakira);
+};
+
 export const updatePacient: RequestHandler = async (req, res) => {
   const { id } = req.params;
   const { totalCostDentalTreatment, numberInstallment } = req.body;
-  const installmentAmount = Math.floor(
-    totalCostDentalTreatment / numberInstallment,
+  const installmentAmount = installmentAmountGenerate(
+    totalCostDentalTreatment,
+    numberInstallment,
   );
   const paymentMonths = paymentMonthsGenerate(numberInstallment);
 

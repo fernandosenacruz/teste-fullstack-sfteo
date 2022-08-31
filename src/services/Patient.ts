@@ -4,6 +4,7 @@ import {
   createPatientModel,
   getPatientsModel,
   getPatientByIdModel,
+  getPatientsByDateModel,
   updatePacientModel,
   patchPatientModel,
   deletePatientModel,
@@ -25,6 +26,18 @@ export const getPatientByIdService = async (id: string) => {
   const patient = await getPatientByIdModel(id);
 
   return { code: StatusCodes.OK, data: patient };
+};
+
+export const getPatientsByDateService = async (selectedMonth: string) => {
+  const x = selectedMonth.split('-');
+
+  const shakira = `${x[1]}-${x[2]}`;
+
+  console.log(shakira);
+
+  const patients = await getPatientsByDateModel(shakira);
+
+  return { code: StatusCodes.OK, data: patients };
 };
 
 export const updatePacientService = async ({
@@ -54,5 +67,8 @@ export const patchPatientService = async ({ id, name }: Partial<IPatient>) => {
 export const deletePatientService = async (id: string) => {
   await deletePatientModel(id);
 
-  return { code: StatusCodes.NO_CONTENT, message: 'patient deteleted successfully' };
+  return {
+    code: StatusCodes.NO_CONTENT,
+    message: 'patient deteleted successfully',
+  };
 };
