@@ -23,19 +23,31 @@ export const createPatientModel = async ({
   return newPatient;
 };
 
-export const getPatientsModel = async () => {
-  const allPatients: IPatient[] = await prisma.patient.findMany();
-
-  return allPatients;
-};
-
-export const getPatientsByDateModel = async (selectedMonth: string) => {
+export const getPatientsModel = async (limit?: string) => {
+  const hasLimit = limit && {take: +limit}
   const allPatients: IPatient[] = await prisma.patient.findMany({
-    where: { paymentMonths: { hasSome: [selectedMonth] } },
+    orderBy: { name: 'asc' },
+    // take: limit ? +limit : 1000,
+    ...hasLimit
   });
 
   return allPatients;
 };
+
+// export const getPatientsByDateModel = async (selectedMonth: string) => {
+  // const allPatients = await prisma.patient.findRaw({
+  //   filter: {
+  //     paymentMonths: {
+  //       $in: [`/\d*?-${selectedMonth}/g`] as unknown as string,
+  //       // $in: ['29-9-2022'],
+  //     },
+  //   },
+  // });
+
+  // console.log(allPatients, selectedMonth);
+
+  // return allPatients;
+// };
 
 export const getPatientByIdModel = async (id: string) => {
   const patientById: IPatient | null = await prisma.patient.findFirst({

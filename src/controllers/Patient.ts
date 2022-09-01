@@ -30,8 +30,9 @@ export const createPatient: RequestHandler = async (req, res) => {
   return res.status(code).json(data);
 };
 
-export const getPatients: RequestHandler = async (_req, res) => {
-  const { code, data } = await getPatientsService();
+export const getPatients: RequestHandler = async (req, res) => {
+  const { limit } = req.query;
+  const { code, data } = await getPatientsService(limit as string | undefined);
 
   return res.status(code).json(data);
 };
@@ -44,12 +45,12 @@ export const getPatientById: RequestHandler = async (req, res) => {
   return res.status(code).json(data);
 };
 
-export const getPatientByMonth: RequestHandler = (req, res) => {
+export const getPatientsByDate: RequestHandler = async (req, res) => {
   const { selectedMonth } = req.query;
 
-  const shakira = getPatientsByDateService(selectedMonth as string);
+  const { code, data } = await getPatientsByDateService(selectedMonth as string);
 
-  return res.json(shakira);
+  return res.status(code).json(data);
 };
 
 export const updatePacient: RequestHandler = async (req, res) => {

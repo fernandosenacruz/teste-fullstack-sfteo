@@ -4,7 +4,6 @@ import {
   createPatientModel,
   getPatientsModel,
   getPatientByIdModel,
-  getPatientsByDateModel,
   updatePacientModel,
   patchPatientModel,
   deletePatientModel,
@@ -16,8 +15,8 @@ export const createPatientService = async (patient: IPatient) => {
   return { code: StatusCodes.CREATED, data: newPatient };
 };
 
-export const getPatientsService = async () => {
-  const allPatients = await getPatientsModel();
+export const getPatientsService = async (limit?: string) => {
+  const allPatients = await getPatientsModel(limit);
 
   return { code: StatusCodes.OK, data: allPatients };
 };
@@ -28,16 +27,21 @@ export const getPatientByIdService = async (id: string) => {
   return { code: StatusCodes.OK, data: patient };
 };
 
-export const getPatientsByDateService = async (selectedMonth: string) => {
-  const x = selectedMonth.split('-');
+export const getPatientsByDateService = async (selectedDate: string) => {
+  const getAllPatients = await getPatientsModel();
+  const patientsBySelectedMonth: IPatient[] = [];
+  const splitedDate = selectedDate.split('-');
+  const selectedMonth = `${splitedDate[1]}-${splitedDate[2]}`;
 
-  const shakira = `${x[1]}-${x[2]}`;
+  getAllPatients.forEach(patient => {
+    const selectedPatients = patient.paymentMonths.some(month =>
+      month.includes(selectedMonth),
+    );
 
-  console.log(shakira);
+    if (selectedPatients) patientsBySelectedMonth.push(patient);
+  });
 
-  const patients = await getPatientsByDateModel(shakira);
-
-  return { code: StatusCodes.OK, data: patients };
+  return { code: StatusCodes.OK, data: patientsBySelectedMonth };
 };
 
 export const updatePacientService = async ({
