@@ -80,32 +80,32 @@ describe('Patient Model', () => {
     expect(responseObject).toEqual(patients);
   });
 
-  // test('should get a patient by id ', async () => {
-  //   let code = 0;
-  //   let responseObject = {};
-  //   let request = { params: '6319f46a8c83b9f8d6bbc047' };
-  //   let next = () => {};
-  //   let response = {
-  //     status: jest.fn().mockImplementation(result => {
-  //       code = result as number;
-  //       return response;
-  //     }),
-  //     json: jest.fn().mockImplementation(result => {
-  //       responseObject = result as IPatient;
-  //     }),
-  //   } as unknown as Partial<Response>;
+  test('should get a patient by id ', async () => {
+    let code = 0;
+    let responseObject = {};
+    let request = { params: '6319f46a8c83b9f8d6bbc047' };
+    let next = () => {};
+    let response = {
+      status: jest.fn().mockImplementation(result => {
+        code = result as number;
+        return response;
+      }),
+      json: jest.fn().mockImplementation(result => {
+        responseObject = result as IPatient;
+      }),
+    } as unknown as Partial<Response>;
 
-  //   mockCtx.prisma.patient.findFirst.mockResolvedValue(request.params);
+    mockCtx.prisma.patient.findFirst.mockResolvedValue(patient01);
 
-  //   await getPatientById(
-  //     request as unknown as Request,
-  //     response as unknown as Response,
-  //     next as NextFunction,
-  //     ctx,
-  //   );
+    await getPatientById(
+      request as unknown as Request,
+      response as unknown as Response,
+      next as NextFunction,
+      ctx,
+    );
 
-  //   expect(responseObject).toEqual(patient01);
-  // });
+    expect(responseObject).toEqual(patient01);
+  });
 
   test('should update the treatment of patient', async () => {
     let code = 0;
