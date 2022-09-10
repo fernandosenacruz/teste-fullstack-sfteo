@@ -86,6 +86,6 @@ export const deletePatientService = async (id: string, ctx: Context) => {
 
   return {
     code: StatusCodes.NO_CONTENT,
-    message: 'patient deteleted successfully',
+    message: 'Patient deteleted successfully',
   };
 };
