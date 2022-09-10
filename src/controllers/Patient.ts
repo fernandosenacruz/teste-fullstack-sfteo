@@ -10,6 +10,7 @@ import {
   patchPatientService,
   deletePatientService,
 } from '../services/Patient';
+import prisma from '../client';
 
 export const createPatient: RequestHandler = async (req, res) => {
   const { name, totalCostDentalTreatment, numberInstallment } = req.body;
@@ -19,13 +20,16 @@ export const createPatient: RequestHandler = async (req, res) => {
   );
   const paymentMonths = paymentMonthsGenerate(numberInstallment);
 
-  const { code, data } = await createPatientService({
-    name,
-    totalCostDentalTreatment,
-    numberInstallment,
-    installmentAmount,
-    paymentMonths,
-  });
+  const { code, data } = await createPatientService(
+    {
+      name,
+      totalCostDentalTreatment,
+      numberInstallment,
+      installmentAmount,
+      paymentMonths,
+    },
+    { prisma },
+  );
 
   return res.status(code).json(data);
 };
@@ -48,7 +52,9 @@ export const getPatientById: RequestHandler = async (req, res) => {
 export const getPatientsByDate: RequestHandler = async (req, res) => {
   const { selectedMonth } = req.query;
 
-  const { code, data } = await getPatientsByDateService(selectedMonth as string);
+  const { code, data } = await getPatientsByDateService(
+    selectedMonth as string,
+  );
 
   return res.status(code).json(data);
 };

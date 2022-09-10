@@ -8,9 +8,10 @@ import {
   patchPatientModel,
   deletePatientModel,
 } from '../models/Patient';
+import { Context } from '../tests/units/context';
 
-export const createPatientService = async (patient: IPatient) => {
-  const newPatient = await createPatientModel(patient);
+export const createPatientService = async (patient: IPatient, ctx: Context) => {
+  const newPatient = await createPatientModel(patient, ctx);
 
   return { code: StatusCodes.CREATED, data: newPatient };
 };

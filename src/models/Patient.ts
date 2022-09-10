@@ -1,16 +1,18 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../client';
 import IPatient from '../interfaces/IPatient';
+import { Context } from '../tests/units/context';
 
-const prisma = new PrismaClient();
-
-export const createPatientModel = async ({
-  name,
-  totalCostDentalTreatment,
-  numberInstallment,
-  installmentAmount,
-  paymentMonths,
-}: IPatient) => {
-  const newPatient: IPatient = await prisma.patient.create({
+export const createPatientModel = async (
+  {
+    name,
+    totalCostDentalTreatment,
+    numberInstallment,
+    installmentAmount,
+    paymentMonths,
+  }: IPatient,
+  ctx: Context,
+) => {
+  const newPatient: IPatient = await ctx.prisma.patient.create({
     data: {
       name,
       totalCostDentalTreatment,
@@ -24,29 +26,29 @@ export const createPatientModel = async ({
 };
 
 export const getPatientsModel = async (limit?: string) => {
-  const hasLimit = limit && {take: +limit}
+  const hasLimit = limit && { take: +limit };
   const allPatients: IPatient[] = await prisma.patient.findMany({
     orderBy: { name: 'asc' },
     // take: limit ? +limit : 1000,
-    ...hasLimit
+    ...hasLimit,
   });
 
   return allPatients;
 };
 
 // export const getPatientsByDateModel = async (selectedMonth: string) => {
-  // const allPatients = await prisma.patient.findRaw({
-  //   filter: {
-  //     paymentMonths: {
-  //       $in: [`/\d*?-${selectedMonth}/g`] as unknown as string,
-  //       // $in: ['29-9-2022'],
-  //     },
-  //   },
-  // });
+// const allPatients = await prisma.patient.findRaw({
+//   filter: {
+//     paymentMonths: {
+//       $in: [`/\d*?-${selectedMonth}/g`] as unknown as string,
+//       // $in: ['29-9-2022'],
+//     },
+//   },
+// });
 
-  // console.log(allPatients, selectedMonth);
+// console.log(allPatients, selectedMonth);
 
-  // return allPatients;
+// return allPatients;
 // };
 
 export const getPatientByIdModel = async (id: string) => {
