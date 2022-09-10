@@ -8,7 +8,7 @@ import {
   patchPatientModel,
   deletePatientModel,
 } from '../models/Patient';
-import { Context } from '../tests/units/context';
+import { Context } from '../test/units/context';
 
 export const createPatientService = async (patient: IPatient, ctx: Context) => {
   const newPatient = await createPatientModel(patient, ctx);

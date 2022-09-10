@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import paymentMonthsGenerate from '../helpers/paymentMonthGenerate';
 import installmentAmountGenerate from '../helpers/installmentAmountGenerate';
 import {
@@ -10,9 +10,14 @@ import {
   patchPatientService,
   deletePatientService,
 } from '../services/Patient';
-import prisma from '../client';
+import { Context } from '../test/units/context';
 
-export const createPatient: RequestHandler = async (req, res) => {
+export const createPatient = async (
+  req: Request,
+  res: Response,
+  _next: NextFunction,
+  ctx: Context,
+) => {
   const { name, totalCostDentalTreatment, numberInstallment } = req.body;
   const installmentAmount = installmentAmountGenerate(
     totalCostDentalTreatment,
@@ -28,7 +33,7 @@ export const createPatient: RequestHandler = async (req, res) => {
       installmentAmount,
       paymentMonths,
     },
-    { prisma },
+    ctx,
   );
 
   return res.status(code).json(data);

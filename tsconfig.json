@@ -8,5 +8,6 @@
     "strict": true,
     "esModuleInterop": true,
     "strictNullChecks": true
-  } 
+  },
+  "exclude": ["**/*.spec.ts"] 
 }

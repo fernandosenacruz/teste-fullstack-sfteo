@@ -1,6 +1,6 @@
 import prisma from '../client';
 import IPatient from '../interfaces/IPatient';
-import { Context } from '../tests/units/context';
+import { Context } from '../test/units/context';
 
 export const createPatientModel = async (
   {
@@ -35,21 +35,6 @@ export const getPatientsModel = async (limit?: string) => {
 
   return allPatients;
 };
-
-// export const getPatientsByDateModel = async (selectedMonth: string) => {
-// const allPatients = await prisma.patient.findRaw({
-//   filter: {
-//     paymentMonths: {
-//       $in: [`/\d*?-${selectedMonth}/g`] as unknown as string,
-//       // $in: ['29-9-2022'],
-//     },
-//   },
-// });
-
-// console.log(allPatients, selectedMonth);
-
-// return allPatients;
-// };
 
 export const getPatientByIdModel = async (id: string) => {
   const patientById: IPatient | null = await prisma.patient.findFirst({
