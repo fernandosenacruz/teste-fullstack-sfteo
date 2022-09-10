@@ -6,6 +6,8 @@
     "rootDir": "./src",
     "lib": ["ES6"],
     "strict": true,
-    "esModuleInterop": true
-  } 
+    "esModuleInterop": true,
+    "strictNullChecks": true
+  },
+  "exclude": ["**/*.spec.ts"] 
 }
