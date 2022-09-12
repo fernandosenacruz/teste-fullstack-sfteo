@@ -134,6 +134,7 @@
     "typescript": "^4.8.3"
   },
   "scripts": {
+    "start": "ts-node src/app.ts ",
     "dev": "nodemon --watch 'src/' --exec 'ts-node src/app.ts' -e ts",
     "test": "jest -i"
   },
