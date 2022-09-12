@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Aplicação full stack para teste prático da empresa Softeo",
   "main": "index.js",
+  "engines": {
+    "node": ">=16.15.0",
+    "npm": ">=8.5.5"
+  },
   "dependencies": {
     "@prisma/client": "^4.2.1",
     "@types/chai": "^4.3.3",
