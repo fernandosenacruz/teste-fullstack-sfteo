@@ -2,12 +2,14 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
-    "outDir": "./dist",
+    "outDir": "build",
     "rootDir": "./src",
     "lib": ["ES6"],
     "strict": true,
     "esModuleInterop": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "skipLibCheck": true
   },
-  "exclude": ["**/*.spec.ts"] 
+  "exclude": ["**/*.spec.ts", "node_modules"],
+  "include": ["src/**/*"] 
 }
